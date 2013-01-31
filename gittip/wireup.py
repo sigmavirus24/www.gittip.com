@@ -44,6 +44,10 @@ def sentry(website):
     sentry_dsn = os.environ.get('SENTRY_DSN')
     if sentry_dsn is not None:
         sentry = raven.Client(sentry_dsn)
+        # Set-up logging to Sentry
+        # http://raven.readthedocs.org/en/latest/config/logging.html
+        handler = raven.handlers.logging.SentryHandler(sentry)
+        raven.conf.setup_logging(handler)
         def tell_sentry(request):
             cls, response = sys.exc_info()[:2]
             if cls is aspen.Response:
